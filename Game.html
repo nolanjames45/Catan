@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<canvas id="ctxdata" width="125" height="700" style="border:1px solid #000000;"></canvas>
+<canvas id="ctx" width="700" height="700" style="border:1px solid #000000;"></canvas>
+<html>
+<body>
+
+<form id="form1">
+Input: <input name="name" type="text" size="20">
+</form>
+<button onclick="input_function()">Submit</button>
+
+<button onclick="roll_function()">Roll</button>
+<script>
+var ctx = document.getElementById("ctx").getContext("2d");
+ctx.font = '30px Arial';
+ 
+var HEIGHT = 700;
+var WIDTH = 700;
+
+var ctxdata = document.getElementById("ctxdata").getContext("2d");
+ctxdata.font = '30px Arial';
+ 
+var dataHEIGHT = 700;
+var dataWIDTH = 125;
+
+var timeWhenGameStarted = Date.now();   //return time in ms
+ 
+var frameCount = 0;
+var time = 1;
+
+roadwidth = 10;
+roadheight = 35;
+
+settlewidth = 15;
+settleheight = 15;
+
+var drawall = 19;
+
+player_one_color = prompt("First Player Color");
+player_two_color = prompt("Second Player Color");
+player_three_color= prompt("Third Player Color");
+player_four_color = prompt("Four Player Color");
+
+var player_one = {
+	color:player_one_color,
+	brick_count:0,
+	forest_count:0,
+	wheat_count:0,
+	rock_count:0,
+	sheep_count:0,
+	vp:0,
+	
+}
+
+var player_two = {
+    color:player_two_color,
+    brick_count:0,
+	 forest_count:0,
+	 wheat_count:0,
+	 rock_count:0,
+	 sheep_count:0,
+	 vp:0,
+}
+
+var player_three = {
+    color:player_three_color,
+    brick_count:0,
+	 forest_count:0,
+	 wheat_count:0,
+	 rock_count:0,
+	 sheep_count:0,
+	 vp:0,
+}
+
+var player_four = {
+    color:player_four_color,
+    brick_count:0,
+	 forest_count:0,
+	 wheat_count:0,
+	 rock_count:0,
+	 sheep_count:0,
+	 vp:0,
+}
+
+current_player_name = player_one_color;
+current_player = player_one;
+
+var arrayEdge = [];
+
+var edge_title_number = 1,edge_side_number = 1,edge_letter_number = 1,edge_xstart = 187,edge_ystart = 85.5,edge_dstart = 63,edge_xmodifer = 0,edge_ymodifer = 0,edge_dmodifer = 0,num = 0;
+
+for (a = 0; a < 19; a++){
+	if(edge_title_number == 1){edge_title_number_in_word_form = "one",edge_xmodifer = 0,edge_ymodifer = 0,edge_modifer = 0;}
+	if(edge_title_number == 2){edge_title_number_in_word_form = "two",edge_xmodifer = 95,edge_ymodifer = 0,edge_modifer = 0;}                                                          
+	if(edge_title_number == 3){edge_title_number_in_word_form = "three",edge_xmodifer = 190,edge_ymodifer = 0,edge_modifer = 0;}
+	if(edge_title_number == 4){edge_title_number_in_word_form = "four",edge_xmodifer = -47.5,edge_ymodifer = 88.5,edge_modifer = 0;}
+	if(edge_title_number == 5){edge_title_number_in_word_form = "five",edge_xmodifer = 47.5,edge_ymodifer = 88.5,edge_modifer = 0;}
+	if(edge_title_number == 6){edge_title_number_in_word_form = "six",edge_xmodifer = 142.5,edge_ymodifer = 88.5,edge_modifer = 0;}
+	if(edge_title_number == 7){edge_title_number_in_word_form = "seven",edge_xmodifer = 237.5,edge_ymodifer = 88.5,edge_modifer = 0;}
+	if(edge_title_number == 8){edge_title_number_in_word_form = "eight",edge_xmodifer = -95,edge_ymodifer = 177,edge_modifer = 0;}
+	if(edge_title_number == 9){edge_title_number_in_word_form = "nine",edge_xmodifer = 0,edge_ymodifer = 177,edge_modifer = 0;}
+	if(edge_title_number == 10){edge_title_number_in_word_form = "ten",edge_xmodifer = 95,edge_ymodifer = 177,edge_modifer = 0;}
+	if(edge_title_number == 11){edge_title_number_in_word_form = "eleven",edge_xmodifer = 190,edge_ymodifer = 177,edge_modifer = 0;}
+	if(edge_title_number == 12){edge_title_number_in_word_form = "twelve",edge_xmodifer = 285,edge_ymodifer = 177,edge_modifer = 0;}
+	if(edge_title_number == 13){edge_title_number_in_word_form = "threeteen",edge_xmodifer = -47.5,edge_ymodifer = 265.5,edge_modifer = 0;}
+	if(edge_title_number == 14){edge_title_number_in_word_form = "fourteen",edge_xmodifer = 47.5,edge_ymodifer = 265.5,edge_modifer = 0;}
+	if(edge_title_number == 15){edge_title_number_in_word_form = "fiveteen",edge_xmodifer = 142.5,edge_ymodifer = 265.5,edge_modifer = 0;}	
+	if(edge_title_number == 16){edge_title_number_in_word_form = "sixteen",edge_xmodifer = 237.5,edge_ymodifer = 265.5,edge_modifer = 0;}
+	if(edge_title_number == 17){edge_title_number_in_word_form = "seventeen",edge_xmodifer = 0,edge_ymodifer = 354,edge_modifer = 0;}
+	if(edge_title_number == 18){edge_title_number_in_word_form = "eightteen",edge_xmodifer = 95,edge_ymodifer = 354,edge_modifer = 0;}
+	if(edge_title_number == 19){edge_title_number_in_word_form = "nineteen",edge_xmodifer = 190,edge_ymodifer = 354,edge_modifer = 0;}	
+
+	for (b = 0; b < 6; b++){	
+		if(edge_side_number == 1){edge_side_number_in_word_form = "one",add_edge_xmodifer = 0,add_edge_ymodifer = 0,add_edge_modifer = 0;} 
+		if(edge_side_number == 2){edge_side_number_in_word_form = "two",add_edge_xmodifer = 47.5,add_edge_ymodifer = 0,add_edge_modifer = 53.5;}
+		if(edge_side_number == 3){edge_side_number_in_word_form = "three",add_edge_xmodifer = 71,add_edge_ymodifer = 44,add_edge_modifer = -63 ;}
+		if(edge_side_number == 4){edge_side_number_in_word_form = "four",add_edge_xmodifer = 47.5,add_edge_ymodifer = 88.5,add_edge_modifer = 0;}
+		if(edge_side_number == 5){edge_side_number_in_word_form = "five",add_edge_xmodifer = 0,add_edge_ymodifer = 88.5,add_edge_modifer = 53;}
+		if(edge_side_number == 6){edge_side_number_in_word_form = "six",add_edge_xmodifer = -24,add_edge_ymodifer = 44,add_edge_modifer = -63;};
+			
+		for (c = 0; c < 4; c++){
+			if(edge_letter_number == 1){edge_letter_number_in_word_form = "x",num = (edge_xstart + edge_xmodifer + add_edge_xmodifer)}
+			if(edge_letter_number == 2){edge_letter_number_in_word_form = "y",num = (edge_ystart + edge_ymodifer + add_edge_ymodifer)}
+			if(edge_letter_number == 3){edge_letter_number_in_word_form = "d",num = (edge_dstart + edge_modifer + add_edge_modifer)}				
+			if (edge_letter_number == 4){edge_letter_number_in_word_form = "c",num = current_player_name}			
+			arrayEdge.push({key: edge_title_number+"_"+edge_side_number+"_"+edge_letter_number,value: num});
+			edge_letter_number += 1;
+			if (edge_letter_number == 5){edge_letter_number = 1}}
+			edge_side_number += 1;	
+			if (edge_side_number == 7){edge_side_number = 1;}}
+			edge_title_number += 1;}
+
+var arrayConner = [];
+
+var conner_title_number = 1,conner_side_number = 1,conner_letter_number = 1,first = 1,conner_xstart = 160.5,conner_ystart = 106,conner_dstart = 0,conner_xmodifer = 0,conner_ymodifer = 0,conner_dmodifer = 0,num = 0;
+for (d = 0; d < 19; d++){
+	if(conner_title_number == 1){conner_title_number_in_word_form = "one",conner_xmodifer = 0,conner_ymodifer = 0,conner_dmodifer = 0;}
+	if(conner_title_number == 2){conner_title_number_in_word_form = "two",conner_xmodifer = 95,conner_ymodifer = 0,conner_dmodifer = 0;}                                                          
+	if(conner_title_number == 3){conner_title_number_in_word_form = "three",conner_xmodifer = 190,conner_ymodifer = 0,conner_dmodifer = 0;}
+	if(conner_title_number == 4){conner_title_number_in_word_form = "four",conner_xmodifer = -47.5,conner_ymodifer = 88.5,conner_dmodifer = 0;}
+	if(conner_title_number == 5){conner_title_number_in_word_form = "five",conner_xmodifer = 47.5,conner_ymodifer = 88.5,conner_dmodifer = 0;}
+	if(conner_title_number == 6){conner_title_number_in_word_form = "six",conner_xmodifer = 142.5,conner_ymodifer = 88.5,conner_dmodifer = 0;}
+	if(conner_title_number == 7){conner_title_number_in_word_form = "seven",conner_xmodifer = 237.5,conner_ymodifer = 88.5,conner_dmodifer = 0;}
+	if(conner_title_number == 8){conner_title_number_in_word_form = "eight",conner_xmodifer = -95,conner_ymodifer = 177,conner_dmodifer = 0;}
+	if(conner_title_number == 9){conner_title_number_in_word_form = "nine",conner_xmodifer = 0,conner_ymodifer = 177,conner_dmodifer = 0;}
+	if(conner_title_number == 10){conner_title_number_in_word_form = "ten",conner_xmodifer = 95,conner_ymodifer = 177,conner_dmodifer = 0;}
+	if(conner_title_number == 11){conner_title_number_in_word_form = "eleven",conner_xmodifer = 190,conner_ymodifer = 177,conner_dmodifer = 0;}
+	if(conner_title_number == 12){conner_title_number_in_word_form = "twelve",conner_xmodifer = 285,conner_ymodifer = 177,conner_dmodifer = 0;}
+	if(conner_title_number == 13){conner_title_number_in_word_form = "threeteen",conner_xmodifer = -47.5,conner_ymodifer = 265.5,conner_dmodifer = 0;}
+	if(conner_title_number == 14){conner_title_number_in_word_form = "fourteen",conner_xmodifer = 47.5,conner_ymodifer = 265.5,conner_dmodifer = 0;}
+	if(conner_title_number == 15){conner_title_number_in_word_form = "fiveteen",conner_xmodifer = 142.5,conner_ymodifer = 265.5,conner_dmodifer = 0;}	
+	if(conner_title_number == 16){conner_title_number_in_word_form = "sixteen",conner_xmodifer = 237.5,conner_ymodifer = 265.5,conner_dmodifer = 0;}
+	if(conner_title_number == 17){conner_title_number_in_word_form = "seventeen",conner_xmodifer = 0,conner_ymodifer = 354,conner_dmodifer = 0;}
+	if(conner_title_number == 18){conner_title_number_in_word_form = "eightteen",conner_xmodifer = 95,conner_ymodifer = 354,conner_dmodifer = 0;}
+	if(conner_title_number == 19){conner_title_number_in_word_form = "nineteen",conner_xmodifer = 190,conner_ymodifer = 354,conner_dmodifer = 0;}	
+	for (e = 0; e < 6; e++){	
+		if(conner_side_number == 1){conner_side_number_in_word_form = "one",add_conner_xmodifer = 0,add_conner_ymodifer = 0,add_conner_dmodifer = 0;} 
+		if(conner_side_number == 2){conner_side_number_in_word_form = "two",add_conner_xmodifer = 47.5,add_conner_ymodifer = -21.5,add_conner_dmodifer = 0;}
+		if(conner_side_number == 3){conner_side_number_in_word_form = "three",add_conner_xmodifer = 95,add_conner_ymodifer = 0,add_conner_dmodifer = 0;}
+		if(conner_side_number == 4){conner_side_number_in_word_form = "four",add_conner_xmodifer = 95,add_conner_ymodifer = 67,add_conner_dmodifer = 0;}
+		if(conner_side_number == 5){conner_side_number_in_word_form = "five",add_conner_xmodifer = 47.5,add_conner_ymodifer = 88.5,add_conner_dmodifer = 0;}
+		if(conner_side_number == 6){conner_side_number_in_word_form = "six",add_conner_xmodifer = 0,add_conner_ymodifer = 67,add_conner_dmodifer = 0;};
+		for (f = 0; f < 4; f++){
+			if(conner_letter_number == 1){conner_letter_number_in_word_form = "x",num = (conner_xstart + conner_xmodifer + add_conner_xmodifer)}
+			if(conner_letter_number == 2){conner_letter_number_in_word_form = "y",num = (conner_ystart + conner_ymodifer + add_conner_ymodifer)}
+			if(conner_letter_number == 3){conner_letter_number_in_word_form = "d",num = (conner_dstart + conner_dmodifer + add_conner_dmodifer)}				
+			if (conner_letter_number == 4){conner_letter_number_in_word_form = "c",num = current_player_name}			
+			arrayConner.push({key: conner_title_number+"_"+conner_side_number+"_"+conner_letter_number,value: num});
+			conner_letter_number += 1;
+			if (conner_letter_number == 5){conner_letter_number = 1}}
+			conner_side_number += 1;	
+			if (conner_side_number == 7){conner_side_number = 1;}}
+			conner_title_number += 1;}
+
+var arrayDice_Total = [];
+
+var dice_total_title_number = 1,dice_total_letter_number = 1,dice_total_xstart = 209,dice_total_ystart = 150,dice_total_xmodifer = 0,dice_total_ymodifer = 0,num = 0;
+for (ddd = 0; ddd < 19; ddd++){
+	if(dice_total_title_number == 1){dice_total_title_number_in_word_form = "one",dice_total_xmodifer = 0,dice_total_ymodifer = 0;}
+	if(dice_total_title_number == 2){dice_total_title_number_in_word_form = "two",dice_total_xmodifer = 95,dice_total_ymodifer = 0;}                                                          
+	if(dice_total_title_number == 3){dice_total_title_number_in_word_form = "three",dice_total_xmodifer = 190,dice_total_ymodifer = 0;}
+	if(dice_total_title_number == 4){dice_total_title_number_in_word_form = "four",dice_total_xmodifer = -47.5,dice_total_ymodifer = 88.5;}
+	if(dice_total_title_number == 5){dice_total_title_number_in_word_form = "five",dice_total_xmodifer = 47.5,dice_total_ymodifer = 88.5;}
+	if(dice_total_title_number == 6){dice_total_title_number_in_word_form = "six",dice_total_xmodifer = 142.5,dice_total_ymodifer = 88.5;}
+	if(dice_total_title_number == 7){dice_total_title_number_in_word_form = "seven",dice_total_xmodifer = 237.5,dice_total_ymodifer = 88.5;}
+	if(dice_total_title_number == 8){dice_total_title_number_in_word_form = "eight",dice_total_xmodifer = -95,dice_total_ymodifer = 177;}
+	if(dice_total_title_number == 9){dice_total_title_number_in_word_form = "nine",dice_total_xmodifer = 0,dice_total_ymodifer = 177;}
+	if(dice_total_title_number == 10){dice_total_title_number_in_word_form = "ten",dice_total_xmodifer = 95,dice_total_ymodifer = 177;}
+	if(dice_total_title_number == 11){dice_total_title_number_in_word_form = "eleven",dice_total_xmodifer = 190,dice_total_ymodifer = 177;}
+	if(dice_total_title_number == 12){dice_total_title_number_in_word_form = "twelve",dice_total_xmodifer = 285,dice_total_ymodifer = 177;}
+	if(dice_total_title_number == 13){dice_total_title_number_in_word_form = "threeteen",dice_total_xmodifer = -47.5,dice_total_ymodifer = 265.5;}
+	if(dice_total_title_number == 14){dice_total_title_number_in_word_form = "fourteen",dice_total_xmodifer = 47.5,dice_total_ymodifer = 265.5;}
+	if(dice_total_title_number == 15){dice_total_title_number_in_word_form = "fiveteen",dice_total_xmodifer = 142.5,dice_total_ymodifer = 265.5;}	
+	if(dice_total_title_number == 16){dice_total_title_number_in_word_form = "sixteen",dice_total_xmodifer = 237.5,dice_total_ymodifer = 265.5;}
+	if(dice_total_title_number == 17){dice_total_title_number_in_word_form = "seventeen",dice_total_xmodifer = 0,dice_total_ymodifer = 354;}
+	if(dice_total_title_number == 18){dice_total_title_number_in_word_form = "eightteen",dice_total_xmodifer = 95,dice_total_ymodifer = 354;}
+	if(dice_total_title_number == 19){dice_total_title_number_in_word_form = "nineteen",dice_total_xmodifer = 190,dice_total_ymodifer = 354;}	
+		for (fff = 0; fff < 2; fff++){
+			if(dice_total_letter_number == 1){dice_total_letter_number_in_word_form = "x",num = (dice_total_xstart + dice_total_xmodifer)}
+			if(dice_total_letter_number == 2){dice_total_letter_number_in_word_form = "y",num = (dice_total_ystart + dice_total_ymodifer)}		
+			arrayDice_Total.push({key: dice_total_title_number+"_"+dice_total_letter_number,value: num});
+			dice_total_letter_number += 1;
+			if (dice_total_letter_number == 3){dice_total_letter_number = 1}}
+			dice_total_title_number += 1;}
+
+var arrayTitle_Type = [];
+
+var title_type_title_number = 1,title_type_letter_number = 1,title_type_xstart = 185.75,title_type_ystart = 179,title_type_xmodifer = 0,title_type_ymodifer = 0,num = 0;
+for (dddd = 0; dddd < 19; dddd++){
+	if(title_type_title_number == 1){title_type_title_number_in_word_form = "one",title_type_xmodifer = 0,title_type_ymodifer = 0;}
+	if(title_type_title_number == 2){title_type_title_number_in_word_form = "two",title_type_xmodifer = 95,title_type_ymodifer = 0;}                                                          
+	if(title_type_title_number == 3){title_type_title_number_in_word_form = "three",title_type_xmodifer = 190,title_type_ymodifer = 0;}
+	if(title_type_title_number == 4){title_type_title_number_in_word_form = "four",title_type_xmodifer = -47.5,title_type_ymodifer = 88.5;}
+	if(title_type_title_number == 5){title_type_title_number_in_word_form = "five",title_type_xmodifer = 47.5,title_type_ymodifer = 88.5;}
+	if(title_type_title_number == 6){title_type_title_number_in_word_form = "six",title_type_xmodifer = 142.5,title_type_ymodifer = 88.5;}
+	if(title_type_title_number == 7){title_type_title_number_in_word_form = "seven",title_type_xmodifer = 237.5,title_type_ymodifer = 88.5;}
+	if(title_type_title_number == 8){title_type_title_number_in_word_form = "eight",title_type_xmodifer = -95,title_type_ymodifer = 177;}
+	if(title_type_title_number == 9){title_type_title_number_in_word_form = "nine",title_type_xmodifer = 0,title_type_ymodifer = 177;}
+	if(title_type_title_number == 10){title_type_title_number_in_word_form = "ten",title_type_xmodifer = 95,title_type_ymodifer = 177;}
+	if(title_type_title_number == 11){title_type_title_number_in_word_form = "eleven",title_type_xmodifer = 190,title_type_ymodifer = 177;}
+	if(title_type_title_number == 12){title_type_title_number_in_word_form = "twelve",title_type_xmodifer = 285,title_type_ymodifer = 177;}
+	if(title_type_title_number == 13){title_type_title_number_in_word_form = "threeteen",title_type_xmodifer = -47.5,title_type_ymodifer = 265.5;}
+	if(title_type_title_number == 14){title_type_title_number_in_word_form = "fourteen",title_type_xmodifer = 47.5,title_type_ymodifer = 265.5;}
+	if(title_type_title_number == 15){title_type_title_number_in_word_form = "fiveteen",title_type_xmodifer = 142.5,title_type_ymodifer = 265.5;}	
+	if(title_type_title_number == 16){title_type_title_number_in_word_form = "sixteen",title_type_xmodifer = 237.5,title_type_ymodifer = 265.5;}
+	if(title_type_title_number == 17){title_type_title_number_in_word_form = "seventeen",title_type_xmodifer = 0,title_type_ymodifer = 354;}
+	if(title_type_title_number == 18){title_type_title_number_in_word_form = "eightteen",title_type_xmodifer = 95,title_type_ymodifer = 354;}
+	if(title_type_title_number == 19){title_type_title_number_in_word_form = "nineteen",title_type_xmodifer = 190,title_type_ymodifer = 354;}	
+	for (ffff = 0; ffff < 2; ffff++){
+			if(title_type_letter_number == 1){title_type_letter_number_in_word_form = "x",num = (title_type_xstart + title_type_xmodifer)}
+			if(title_type_letter_number == 2){title_type_letter_number_in_word_form = "y",num = (title_type_ystart + title_type_ymodifer)}		
+			arrayTitle_Type.push({key: title_type_title_number+"_"+title_type_letter_number,value: num});
+			title_type_letter_number += 1;
+			if (title_type_letter_number == 3){title_type_letter_number = 1}}
+			title_type_title_number += 1;}
+
+var arrayHarbor_Placement = [];
+
+var harbor_placement_title_number = 1,harbor_placement_letter_number = 1,harbor_placement_xstart = 152,harbor_placement_ystart = 58,harbor_placement_dstart = -25,harbor_placement_xmodifer = 0,harbor_placement_ymodifer = 0,harbor_placement_dmodifer = 0,num = 0;
+for (nj = 0; nj < 19; nj++){
+	if(harbor_placement_title_number == 1){harbor_placement_title_number_in_word_form = "one",harbor_placement_xmodifer = 0,harbor_placement_ymodifer = 0,harbor_placement_dmodifer = 0;}
+	if(harbor_placement_title_number == 2){harbor_placement_title_number_in_word_form = "two",harbor_placement_xmodifer = 340-152,harbor_placement_ymodifer = 61-58,harbor_placement_dmodifer = 28+25;}                                                          
+	if(harbor_placement_title_number == 3){harbor_placement_title_number_in_word_form = "three",harbor_placement_xmodifer = 480-152,harbor_placement_ymodifer = 139-58,harbor_placement_dmodifer = 27+25;}
+	if(harbor_placement_title_number == 4){harbor_placement_title_number_in_word_form = "four",harbor_placement_xmodifer = 597-152,harbor_placement_ymodifer = 324-58,harbor_placement_dmodifer = 0+25;}
+	if(harbor_placement_title_number == 5){harbor_placement_title_number_in_word_form = "five",harbor_placement_xmodifer = 502-152,harbor_placement_ymodifer = 520-58,harbor_placement_dmodifer = -24+25;}
+	if(harbor_placement_title_number == 6){harbor_placement_title_number_in_word_form = "six",harbor_placement_xmodifer = 358-152,harbor_placement_ymodifer = 602-58,harbor_placement_dmodifer = -26+25;}
+	if(harbor_placement_title_number == 7){harbor_placement_title_number_in_word_form = "seven",harbor_placement_xmodifer = 133-152,harbor_placement_ymodifer = 615-58,harbor_placement_dmodifer = 29+25;}
+	if(harbor_placement_title_number == 8){harbor_placement_title_number_in_word_form = "eight",harbor_placement_xmodifer = 32-152,harbor_placement_ymodifer = 414-58,harbor_placement_dmodifer = 0+25;}
+	if(harbor_placement_title_number == 9){harbor_placement_title_number_in_word_form = "nine",harbor_placement_xmodifer = 37-152,harbor_placement_ymodifer = 239-58,harbor_placement_dmodifer = 0+25;}
+
+	for (njnj = 0; njnj < 3; njnj++){
+			if(harbor_placement_letter_number == 1){harbor_placement_letter_number_in_word_form = "x",num = (harbor_placement_xstart + harbor_placement_xmodifer)}
+			if(harbor_placement_letter_number == 2){harbor_placement_letter_number_in_word_form = "y",num = (harbor_placement_ystart + harbor_placement_ymodifer)}		
+			if(harbor_placement_letter_number == 3){harbor_placement_letter_number_in_word_form = "d",num = (harbor_placement_dstart + harbor_placement_dmodifer)}			
+			arrayHarbor_Placement.push({key: harbor_placement_title_number+"_"+harbor_placement_letter_number,value: num});
+			harbor_placement_letter_number += 1;
+			if (harbor_placement_letter_number == 4){harbor_placement_letter_number = 1}}
+			harbor_placement_title_number += 1;}
+
+var arrayCheck_One = []
+var arrayCheck_Two = []
+var arrayCheck_Thr = []
+
+var check_title_number = 1,check_side_number = 1,check_letter_number = 1;
+for (d = 0; d < 19; d++){
+	if(check_title_number == 1){check_title_number_in_word_form = "1";}
+	if(check_title_number == 2){check_title_number_in_word_form = "2";}                                                          
+	if(check_title_number == 3){check_title_number_in_word_form = "3";}
+	if(check_title_number == 4){check_title_number_in_word_form = "4";}
+	if(check_title_number == 5){check_title_number_in_word_form = "5";}
+	if(check_title_number == 6){check_title_number_in_word_form = "6";}
+	if(check_title_number == 7){check_title_number_in_word_form = "7";}
+	if(check_title_number == 8){check_title_number_in_word_form = "8";}
+	if(check_title_number == 9){check_title_number_in_word_form = "9";}
+	if(check_title_number == 10){check_title_number_in_word_form = "10";}
+	if(check_title_number == 11){check_title_number_in_word_form = "11";}
+	if(check_title_number == 12){check_title_number_in_word_form = "12";}
+	if(check_title_number == 13){check_title_number_in_word_form = "13";}
+	if(check_title_number == 14){check_title_number_in_word_form = "14";}
+	if(check_title_number == 15){check_title_number_in_word_form = "15";}	
+	if(check_title_number == 16){check_title_number_in_word_form = "16";}
+	if(check_title_number == 17){check_title_number_in_word_form = "17";}
+	if(check_title_number == 18){check_title_number_in_word_form = "18";}
+	if(check_title_number == 19){check_title_number_in_word_form = "19";}	
+	for (e = 0; e < 6; e++){	
+		if(check_side_number == 1){check_side_number_in_word_form = "1";} 
+		if(check_side_number == 2){check_side_number_in_word_form = "2";}
+		if(check_side_number == 3){check_side_number_in_word_form = "3";}
+		if(check_side_number == 4){check_side_number_in_word_form = "4";}
+		if(check_side_number == 5){check_side_number_in_word_form = "5";}
+		if(check_side_number == 6){check_side_number_in_word_form = "6";}
+		for (f = 0; f < 3; f++){
+			if(check_letter_number == 1){check_letter_number_in_word_form = "1",arrayCheck_One.push(check_title_number_in_word_form+check_side_number_in_word_form+check_letter_number_in_word_form);}
+			if(check_letter_number == 2){check_letter_number_in_word_form = "2",arrayCheck_Two.push(check_title_number_in_word_form+check_side_number_in_word_form+check_letter_number_in_word_form);}
+			if(check_letter_number == 3){check_letter_number_in_word_form = "3",arrayCheck_Thr.push(check_title_number_in_word_form+check_side_number_in_word_form+check_letter_number_in_word_form);}				
+			arrayHarbor_Placement.push({key: harbor_placement_title_number+"_"+harbor_placement_letter_number,value: num});
+			check_letter_number += 1;
+			if (check_letter_number == 4){check_letter_number = 1}}
+			check_side_number += 1;	
+			if (check_side_number == 7){check_side_number = 1;}}
+			check_title_number += 1;}
+
+var arrayEdit_Check = []
+var arrayEdit_Act = []
+
+var edit_title_number = 1,edit_side_number = 1,edit_letter_number = 1;
+for (dq = 0; dq < 4; dq++){
+	if(edit_title_number == 1){edit_title_number_in_word_form = "1";}
+	if(edit_title_number == 2){edit_title_number_in_word_form = "2";}                                                          
+	if(edit_title_number == 3){edit_title_number_in_word_form = "3";}
+	if(edit_title_number == 4){edit_title_number_in_word_form = "4";}
+	for (eq = 0; eq < 6; eq++){	
+		if(edit_side_number == 1){edit_side_number_in_word_form = "1";} 
+		if(edit_side_number == 2){edit_side_number_in_word_form = "2";}
+		if(edit_side_number == 3){edit_side_number_in_word_form = "3";}
+		if(edit_side_number == 4){edit_side_number_in_word_form = "4";}
+		if(edit_side_number == 5){edit_side_number_in_word_form = "5";}
+		if(edit_side_number == 6){edit_side_number_in_word_form = "6";}
+		for (fq = 0; fq < 2; fq++){
+			if(edit_letter_number == 1){edit_letter_number_in_word_form = "0",arrayCheck_One.push(edit_title_number_in_word_form+edit_side_number_in_word_form+edit_letter_number_in_word_form);}
+			if(edit_letter_number == 2){edit_letter_number_in_word_form = "1",arrayCheck_Two.push(edit_title_number_in_word_form+edit_side_number_in_word_form+edit_letter_number_in_word_form);}
+			arrayEdit_Check.push("9"+edit_title_number_in_word_form+edit_side_number_in_word_form+edit_letter_number_in_word_form);
+			edit_letter_number += 1;
+			if (edit_letter_number == 3){edit_letter_number = 1}}
+			edit_side_number += 1;	
+			if (edit_side_number == 7){edit_side_number = 1;}}
+			edit_title_number += 1;}
+
+function shuffle (array) {
+	var currentIndex = array.length, temporaryValue, randomIndex;
+	while (0 !== currentIndex){
+		randomIndex = Math.floor(Math.random()*currentIndex);
+		currentIndex -= 1;
+		temporaryValue = array[currentIndex];
+		array[currentIndex] = array[randomIndex];
+		array[randomIndex] = temporaryValue;	
+	}
+	
+	return array;
+}
+
+var dice_total = [2,3,3,4,4,5,5,6,6,8,8,9,9,10,10,11,11,12];
+dice_total = shuffle(dice_total);
+
+var title_type = ["Desert","Brick","Brick","Brick","Rock","Rock","Rock","Sheep","Sheep","Sheep","Sheep","Forest","Forest","Forest","Forest","Wheat","Wheat","Wheat","Wheat"];
+title_type = shuffle(title_type);
+
+var harbor_placement = ["2:1 B","2:1 R","2:1 S","2:1 F","2:1 W","3:1 A","3:1 A","3:1 A","3:1 A"];
+harbor_placement = shuffle(harbor_placement);
+
+var card = ["Year of Plenty","Year of Plenty","Year of Plenty","Road Building","Road Building","Road Building","Monopoly","Monopoly","Monopoly","Library","Palace","Market","University","Chapel","Knight","Knight","Knight","Knight","Knight","Knight","Knight","Knight","Knight","Knight","Knight","Knight","Knight","Knight","Knight","Knight","Knight","Knight","Knight","Knight"];
+card = shuffle(card);
+
+var board = new Image();
+board.src = 'Board.JPG';
+
+var edgelist = [];
+var connerlist = [];
+
+drawHope = function(one,two,three){
+	
+if (one == 1) {
+	if (two == 1) {
+		if (three == 1) {
+			player_one.brickcount+=1;
+}		
+}
+}
+}
+
+drawEdge = function(one,two,three,color){
+        ctx.save();
+        ctx.beginPath();
+        ctx.translate( one+roadwidth/2, two+roadheight/2 );
+        ctx.rotate(three*Math.PI/180);
+        ctx.rect( -roadwidth/2, -roadheight/2, roadwidth,roadheight);
+        ctx.fillStyle=color;
+        ctx.fill();
+        ctx.restore();
+
+    }
+    
+drawConner = function(one,two,three,color,five){
+        ctx.save();
+        ctx.beginPath();
+        ctx.translate( one+settlewidth/2, two+settleheight/2 );
+        ctx.rotate(three*Math.PI/180);
+        ctx.rect( -settlewidth/2, -settleheight/2, settlewidth,settleheight);
+        ctx.fillStyle=color;
+        ctx.fill();
+        ctx.lineWidth = 3;
+		  if(five == 1){
+		  	ctx.strokeStyle = "grey";
+		  }		  
+		  else {
+		  	ctx.strokeStyle = "black";
+		  }
+		  ctx.stroke();
+        ctx.restore();
+
+    }
+
+diceone = 0;
+dicetwo = 0;
+adddice = 0;
+
+update = function(){
+        ctx.clearRect(0,0,WIDTH,HEIGHT);
+        ctxdata.clearRect(0,0,dataWIDTH,dataHEIGHT);
+        frameCount++;
+        ctx.drawImage(board,10,10);
+
+        if(time <= 0){
+                var timeSurvived = Date.now() - timeWhenGameStarted;           
+                console.log("You lost! You survived for " + timeSurvived + " ms.");            
+                startNewGame();
+        }
+        
+        input_function = function(){
+		      x=document.getElementById("form1"); 
+		      y=x.elements["name"].value;			
+
+				if(y == "d"){
+		               
+		                if(current_player == player_one){
+		                    current_player = player_two;
+		                    current_player_name = player_two_color;
+		                }
+		                else if(current_player == player_two){
+		                    current_player = player_three;
+		                    current_player_name = player_three_color;
+		                }
+		                else if(current_player == player_three){
+		                    current_player = player_four;
+		                    current_player_name = player_four_color;
+		                }
+		                else if(current_player == player_four){
+		                    current_player = player_one;
+		                    current_player_name = player_one_color;
+		                }
+		                }				
+											
+					draw_p = function () {
+						
+							var many_ifs_title_number = 1,many_ifs_side_number = 1,many_ifs_type = 1;
+								for (qddd = 0; qddd < 38; qddd++){
+										for (qfff = 0; qfff < 6; qfff++){
+											if(y==((many_ifs_title_number*100)+(many_ifs_side_number*10)+(many_ifs_type)));
+											
+											if(y<1000){hard = ((((((y - (101+((Math.floor(((y % 1000)/100))-1)*100)))/10))-1) + (((Math.floor(((y % 1000)/100)))-1)*6))*4)}
+											else{hard = (((((Math.floor(((y % 1000)/100)))+9)*6) + (((y-(1001+((Math.floor(((y % 1000)/100))) * 100)))/10)-1))*4)}
+											
+											edgelist.push(arrayEdge[hard].value,arrayEdge[hard+1].value,arrayEdge[hard+2].value,current_player_name)												
+											qddd = 38;
+											break;
+											many_ifs_side_number += 1;
+											if (many_ifs_side_number == 7){many_ifs_side_number = 1;}}
+											many_ifs_title_number += 1;
+											if(many_ifs_title_number == 20){many_ifs_type+=1,many_ifs_title_number = 1;}}
+							}
+							
+					draw_u = function () {
+							var random = 1,randoms = 1,randomt = 1;
+										for (fgh = 0; fgh < 38; fgh++){
+												for (ghj = 0; ghj < 6; ghj++){
+													if(y==((random*100)+(randoms*10)+(randomt)));
+													
+													if(y<1000){tyu = ((((((y - (102+((Math.floor(((y % 1000)/100))-1)*100)))/10))-1) + (((Math.floor(((y % 1000)/100)))-1)*6))*4)}
+													else{tyu = (((((Math.floor(((y % 1000)/100)))+9)*6) + (((y-(1002+((Math.floor(((y % 1000)/100))) * 100)))/10)-1))*4)}
+													console.log(arrayConner)
+													connerlist.push(arrayConner[tyu].value,arrayConner[tyu+1].value,arrayConner[tyu+2].value,current_player_name,oneone)	
+													fgh = 38;
+													break;
+													randoms += 1;
+													if (randoms == 7){randoms = 1;}}
+													random += 1;
+													if(random == 20){randomt+=1,random = 1;}}
+					}		
+					
+												
+					edit_i = function(){
+
+						op = Math.floor((y%1000)/100)
+						po = Math.floor((y%100)/10)
+						oo = Math.floor((y%10))
+						arrayEdit_Act.push(op,po,oo)	
+						//console.log(arrayEdit_Act)									
+					}	
+							
+							
+							
+				wasd = 0;
+				qwer = 0;
+				zxcv = 0;
+				poiu = 0;
+				
+				for(valo in arrayCheck_One){
+					if(y == arrayCheck_One[valo]){
+							wasd = 1;
+							}}
+
+				
+				for(valt in arrayCheck_Two){
+					if(y == arrayCheck_Two[valt]){
+							qwer = 1;							
+				}}
+				
+								
+				
+				for(valtr in arrayCheck_Thr){
+					if(y == arrayCheck_Thr[valtr]){
+							zxcv = 1;							
+				}}				
+				
+				for(rewq in arrayEdit_Check){
+					if(y == arrayEdit_Check[rewq]){
+							poiu = 1;							
+				}}	
+				
+				if(wasd == 1){
+					draw_p();
+					wasd = 0;				
+				}								
+
+				if(qwer == 1){					
+					oneone = 1;					
+					draw_u();
+					qwer = 0;				
+				}	
+				
+				if(zxcv == 1){					
+					y = (y - 1)					
+					oneone = 2;					
+					draw_u();					
+					zxcv = 0;				
+				}				
+					
+				if(poiu == 1){	
+					edit_i();
+					poiu = 0;		
+				}
+				
+				
+				}	
+					
+			roll_function = function(){
+				diceone = (Math.floor(Math.random() * 6) + 1);
+				dicetwo = (Math.floor(Math.random() * 6) + 1);
+				adddice = diceone + dicetwo;
+			}
+
+    	
+        edge_index = 0;        
+        conner_index = 0;        	
+      	
+		push_everything = function() {
+			for (g = 0; g < 114; g++){
+				edgelist.push(arrayEdge[edge_index].value,arrayEdge[edge_index+1].value,arrayEdge[edge_index+2].value,arrayEdge[edge_index+3].value);
+				edge_index +=5;	
+				connerlist.push(arrayConner[conner_index].value,arrayConner[conner_index+1].value,arrayConner[conner_index+2].value,arrayConner[conner_index+3].value);
+				conner_index +=5;}}
+
+		  tod = 0;	
+		  tody = 0;
+		
+		  draw_title_type = function () {
+		  		  	
+		  	ctx.font = '20px Arial';			
+				
+			for (hj = 0; hj < 19; hj++){
+				if(title_type[tody] == 'Desert'){
+		  			ctx.fillText('R',arrayDice_Total[tod].value,arrayDice_Total[tod+1].value);
+		  			ctx.fillText(title_type[tody],arrayTitle_Type[tod].value,arrayTitle_Type[tod+1].value);
+		  			if(tody == 18){}
+		  			else{ctx.fillText(dice_total[tody],arrayDice_Total[36].value,arrayDice_Total[37].value);}
+		  			
+		   }
+		  	
+		   else {
+		  			if(tody == 18){}
+		  			else{ctx.fillText(dice_total[tody],arrayDice_Total[tod].value,arrayDice_Total[tod+1].value);}
+		  			ctx.fillText(title_type[tody],arrayTitle_Type[tod].value,arrayTitle_Type[tod+1].value);
+		  			
+		   }
+		   tody+=1;
+      	tod+=2;	}
+			
+			harborwidth = 45;
+			harborheight = 14;
+			
+			drawHarbor_Placement = function(one,two,three,color){
+		        ctx.save();
+		        ctx.beginPath();
+		        ctx.translate( one+harborwidth/2, two+harborheight/2 );
+		        ctx.rotate(three*Math.PI/180);
+		        ctx.font = '15px Arial';
+		        ctx.fillStyle = color;
+		        ctx.fillText(harbor_placement[bob],-harborwidth/2, -harborheight/2);
+		        ctx.restore();
+		
+		    }
+		    
+			bob = 0;
+			numy = 0;
+			
+			for(liv = 0; liv < 9; liv++){
+				
+				drawHarbor_Placement(arrayHarbor_Placement[numy].value,arrayHarbor_Placement[numy+1].value,arrayHarbor_Placement[numy+2].value,"black");
+				numy +=3;
+				bob+=1;
+			}
+
+		  	ctx.font = '30px Arial';
+		  }
+		  
+		  draw_title_type();		  
+		  
+		  if(drawall == 1){
+		  		push_everything();		
+	     }	      
+     
+        draw_edge_index = 0;
+        draw_conner_index = 0;
+        bob_index = 0;
+        //console.log(edgelist)
+      
+        draw_everything = function(){
+        	for (h = 0; h < 228; h++){
+      		drawEdge(edgelist[draw_edge_index],edgelist[draw_edge_index+1],edgelist[draw_edge_index+2],edgelist[draw_edge_index+3]);
+      		draw_edge_index +=4;
+      		drawConner(connerlist[draw_conner_index],connerlist[draw_conner_index+1],connerlist[draw_conner_index+2],connerlist[draw_conner_index+3],connerlist[draw_conner_index+4]);
+      		draw_conner_index +=5;
+      		
+      		}
+      	drawHope(arrayEdit_Act[bob_index],arrayEdit_Act[bob_index+1],arrayEdit_Act[bob_index+2])
+      	bob_index +=3;
+      		}
+	
+        draw_everything();
+        ctx.clearRect(0,0,100,100);
+        ctxdata.fillText(current_player_name,0,30);
+        ctxdata.fillText("Brick: " + current_player.brick_count,0,90);
+		  ctxdata.fillText("Rock: " + current_player.rock_count,0,120);
+        ctxdata.fillText("Wheat: " + current_player.wheat_count,0,150);
+		  ctxdata.fillText("Sheep: " + current_player.sheep_count,0,180);
+		  ctxdata.fillText("Forest: " + current_player.forest_count,0,210);
+		  ctxdata.fillText("VP: " + current_player.vp,0,240);
+		  ctxdata.fillText("Dice1: " + diceone,0,635);
+		  ctxdata.fillText("Dice2: " + dicetwo,0,665);
+		  ctxdata.fillText("Total: " + adddice,0,695);
+}
+
+startNewGame = function(){
+    time = 10;
+    timeWhenGameStarted = Date.now();
+    frameCount = 0;
+}
+ 
+setInterval(update,40);
+
+</script>
